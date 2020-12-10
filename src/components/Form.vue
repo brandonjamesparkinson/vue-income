@@ -1,16 +1,43 @@
 <template>
-  <form>
-      <input type="text" placeholder="Description..."/>
-      <input type="number" placeholder="Value..."/>
-      <input type="date" placeholder ="Date...">
+  <form @submit.prevent="FormHandler">
+      <input type="text" placeholder="Description..." v-model="formData.desc"/>
+      <input type="number" placeholder="Value..." v-model="formData.value"/>
+      <input type="date" placeholder ="Date..." v-model="formData.date">
       <input type="submit" value="Submit">
-
   </form>
 </template>
 
 <script>
-export default {
+import { reactive } from 'vue';
 
+export default {
+    props: {
+        state: Object
+    },
+    setup (props, { emit }) {
+        const formData = reactive({
+            desc: null,
+            value: null,
+            date: null
+        });
+
+        function FormHandler () {
+            emit("add-income", {
+                desc: formData.desc,
+                value: formData.value,
+                date: formData.date
+            });
+
+            formData.desc = null;
+            formData.value = null;
+            formData.date = null;
+        }
+
+        return {
+            FormHandler,
+            formData
+        }
+    }
 }
 </script>
 
@@ -56,7 +83,7 @@ export default {
   form input:first-of-type {
     border-radius: 8px 0px 0px 8px;
   }
-  
+
   form input:last-of-type {
     border-radius: 0px 8px 8px 0px;
   }
